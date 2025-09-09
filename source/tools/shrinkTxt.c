@@ -28,7 +28,7 @@ geoID   Namn        lat         lon         Land    Befolkning  timezone
 2673730	Stockholm   59.32938	18.06871    SE      1515017     Europe/Stockholm
 */
 #include <assert.h>
-#include <malloc.h> 3sdqcyXEO3
+#include <malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 
