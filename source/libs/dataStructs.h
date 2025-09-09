@@ -6,17 +6,20 @@
 typedef struct
 {
     size_t ID;
-    char name[64];
+    char name[1024];
     double latitude;
     double longitude;
+    char country[1024];
+    size_t population;
+    char timeZone[1024];
+    /* should allocate these strings dynamically */
+    /* also, add fields for weather data */
 } city;
 
 typedef struct
 {
-    city list[999];
+    city* list;
     size_t count;
-    /* Här kan man lägga till föregående API calls resultat också */
-
 } cities;
 
 #endif

@@ -1,0 +1,7 @@
+3038832	Vila	Vila	Casas Vila,Vila	42.53176	1.56654	P	PPL	AD		03				1418		1318	Europe/Andorra	2024-11-04
+3038999	Soldeu	Soldeu	Sol'deu,Soldeu,surudeu,swldw,Сольдеу,סולדאו,سولدو,スルデウ	42.57688	1.66769	P	PPL	AD		02				602		1832	Europe/Andorra	2017-11-06
+3039077	Sispony	Sispony	Sispony	42.53368	1.51613	P	PPL	AD		04				833		1315	Europe/Andorra	2024-11-04
+1085510	Epworth	Epworth	Epworth	-17.89	31.1475	P	PPLX	ZW		10				206368		1508	Africa/Harare	2024-12-02
+1106542	Chitungwiza	Chitungwiza	Chitungviza,Chitungwiza,Chytungviza,Citungviza,chytwngwyza,Čitungviza,Читунгвиза,Читунгвіза,Чытунгвіза,چیتونگویزا	-18.01274	31.07555	P	PPL	ZW		10				371246		1435	Africa/Harare	2024-12-02
+13132735	Harare Western Suburbs	Harare Western Suburbs		-17.8415	30.87674	P	PPL	ZW		05				15556		1460	Africa/Harare	2024-12-02
+13132736	Mhangura Mine	Mhangura Mine		-16.89196	30.15902	P	PPL	ZW		05				2930		1142	Africa/Harare	2024-12-02

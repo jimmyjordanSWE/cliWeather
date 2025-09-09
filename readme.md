@@ -13,3 +13,5 @@ Program does the following:
 There is a huge database (~400MiB) of all location names on earth at [opengeo](https://www.geonames.org/).
 I will use the list of all locations (and lat/long) with a population of minimum 500 (36MiB) to build a "trie" datastructure that is then used for the location autocomplete.
 
+# Dev diary
+2025-09-09 Finished the code for processing geonames files. I can now start on autocomplete / spelling suggestions.
