@@ -1,5 +1,5 @@
-#ifndef __types_h__
-#define __types_h__
+#ifndef __dataStructs__
+#define __dataStructs__
 
 #include <stddef.h>
 
@@ -13,8 +13,8 @@ typedef struct
 
 typedef struct
 {
-    city listOfCities[999];
-    size_t numberOfCities;
+    city list[999];
+    size_t count;
     /* Här kan man lägga till föregående API calls resultat också */
 
 } cities;
