@@ -1,21 +1,44 @@
 /*
+PSEUDO DATA:
+typedef struct
+{
+    char* name
+    char* country
+    double latitude
+    double longitude
+    size_t population
+}
+
+typedef struct
+{
+    city* list;
+    size_t count;
+} list;
+
+PSEUDO CODE:
+
+main()
+{
+    UIprintCities(char* cities);
+    UIgetSelection(cities cities.count)
+
+}
+
 ANTECKNINGAR:
-    - Vore kul att bygga upp egna tools som man kan återanvända i andra CLI program
+    - använd gcc  main.c  tools/UI.c tools/types.c -Wall -Wno-implicit-function-declaration -lcurl för att kompilera. Timers är itne deklarerade och funkar inte med -Wall
     - hackig GUI och input hantering. Kul att prova goto men måste ju göra riktiga funktioner och överskådligtbart flöde.
     - Speciellt rörigt att ha en rekursiv funktion som huvudsaklig inputhanterare.
     - Kanske hämta lat och long och stadsnamn från apiet själv?
 
 TO DO:
     - Strukturera om
-    - Speciellt input hanteringen. Är nu i en rekursiv funktion där även quit logiken ligger och flippar en global variabel.
-    - Kanske kan flusha buffern och göra carriage return äm amn inte skriver in sifforr?
+    - Speciellt input hanteringen. Är nu i en rekursiv funktion där även quit logiken ligger och flippar en global variabel
 
 NÄSTA STEG:
     - Plocka stadsnamn från geonames listan istället, 36mb textfil men mycket data som kan tas bort. (alla städer med fler än 500 invånare.)
     - Läs in API-svaret till en fil / buffer och parsa sedan med jansson
     - lägg till val för att hämta temp för alla städer och sedan spara in det i strukturen med städer.
     - loggfil med allt som händer, typ nått enkelt eventsystem?
-
 */
 
 /*
@@ -66,6 +89,9 @@ SLASK:
     }
 
 */
+
+#include "tools/UI.h"
+#include "tools/types.h"
 #include <assert.h>
 #include <curl/curl.h>
 #include <stddef.h>
@@ -94,24 +120,8 @@ const char swedishCitiesDataBase[] = "Stockholm:59.3293:18.0686\n"
                                      "Luleå:65.5848:22.1567\n"
                                      "Kiruna:67.8558:20.2253\n";
 
-typedef struct
-{
-    size_t ID;
-    char name[MAX_CITY_NAME_LENGTH];
-    double latitude;
-    double longitude;
-} city;
-
-typedef struct
-{
-    city listOfCities[MAX_CITIES];
-    size_t numberOfCities; /* Använder size_t för det är vad den är till för */
-    /* Här kan man lägga till föregående API calls resultat också */
-
-} cities;
-
 /* GLOBAL VARAIBLES */
-int exitCode = 0; /* sätts till -1 när ma nska stänga ned */
+int exitCode = 0;
 struct timeval timeStart, timeEnd;
 
 void printSelectableCities(int _nrCities, city* _listOfCities)
@@ -122,48 +132,6 @@ void printSelectableCities(int _nrCities, city* _listOfCities)
         printf("%3d: %s\n", i + 1, _listOfCities[i].name);
     }
     printf("SELECT A CITY (1-%d): ", _nrCities);
-}
-
-/* for when user types in multiple invalid charachters also quit if any char is Q or q*/
-int clearInputBuffer()
-{
-    int currentChar; // Måste vara int för att kunna hålla EOF tror jag
-    while ((currentChar = getchar()) != '\n' && currentChar != EOF)
-    {
-        if (currentChar == 'Q' || currentChar == 'q')
-        {
-            exitCode = -1;
-            return -1;
-        }
-    }
-    return 0;
-}
-/* Denna funktion gör nu två (nu 3) saker, men man vill aldrig prompta användaren utan att också läsa input, och vise versa. Så mejkar inte sense att dela upp. Ifs så lade jag nu
- * till att quit logiken bubblar upp härifrån också så är nog dags att dela upp den  */
-int promptAndGetSelectionFromUser(cities* _selectableCities, city* _selectedCity)
-{
-    int selection = 0;
-
-    if (!(scanf("%d", &selection)) || selection > _selectableCities->numberOfCities || selection < 1)
-    {
-        /* if user types in letters, clear input buffer and retry  */
-        if (clearInputBuffer() == -1)
-        {
-            return -1;
-        }
-        printf("INVALID INPUT, RETRY: ");
-        selection = promptAndGetSelectionFromUser(_selectableCities, _selectedCity);
-    }
-
-    /* -1 because the citites are zero indexed internally and 1 indexed in the GUI  */
-    selection--;
-
-    _selectedCity->ID = selection;
-    strcpy(_selectedCity->name, _selectableCities->listOfCities[selection].name);
-    _selectedCity->latitude = _selectableCities->listOfCities[selection].latitude;
-    _selectedCity->longitude = _selectableCities->listOfCities[selection].longitude;
-
-    return selection - 1;
 }
 
 size_t callback_handleResponse(void* _recievedChunk, size_t _size, size_t _numberOfMembers, void* _userPointer)
@@ -228,7 +196,6 @@ void getCitiesFromStringDataBase(cities* _selectableCities)
 
 int main()
 {
-    /* one time setup */
     cities selectableCities;
     city selectedCity;
 
@@ -244,7 +211,6 @@ main_program_loop:
         goto program_exit;
     }
 
-    /* Build URL */
     char URL[1024];
     /* Sample DB only have 4 decimal places, but 6 are needed for meter acuracy */
     sprintf(URL, "https://api.open-meteo.com/v1/forecast?latitude=%.4lf&longitude=%.4lf&current_weather=true", selectedCity.latitude, selectedCity.longitude);
@@ -256,24 +222,20 @@ main_program_loop:
 
     printf("\n=== SENDING REQUEST =================\n");
 
-    /* CURL grejjer */
-    /*
-    This function sets up the program environment that libcurl needs. Think of it as an extension of the library loader.
-    This function must be called at least once.
-    */
     curl_global_init(CURL_GLOBAL_DEFAULT);
-    /*
-    Allocates and returns an easy handle that is used as input to other functions in the easy interface.
-    The easy handle is used to hold and control a single network transfer. It is encouraged to reuse easy handles for repeated transfers with curl_easy_duphandle()
-    */
+
     CURL* curl = curl_easy_init();
     CURLcode res;
 
     curl_easy_setopt(curl, CURLOPT_URL, URL);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback_handleResponse);
 
-    gettimeofday(&timeStart, NULL); /* Startar timer  */
-    res = curl_easy_perform(curl);  /* This calls the API and then executes the above supplied callback function when data is recieved */
+    gettimeofday(&timeStart, NULL);
+    res = curl_easy_perform(curl);
+    if (res != CURLE_OK)
+    {
+        fprintf(stdout, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+    }
 
     clearInputBuffer();
     printf("\n\nPress ENTER to go again or 'q' to exit: ");
