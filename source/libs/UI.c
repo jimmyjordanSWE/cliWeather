@@ -5,7 +5,7 @@
 /* for when user types in multiple invalid charachters any char is Q or q*/
 int clearInputBuffer()
 {
-    char currentChar; // Måste vara int för att kunna hålla EOF
+    char currentChar;
     while ((currentChar = getchar()) != '\n' && currentChar != EOF)
         ;
 
@@ -14,9 +14,9 @@ int clearInputBuffer()
 /* denna funktion slutar inte förens den kan returnera ett valid nummer eller 0 */
 int getSelectionFromUser(cities* _allCities, city* _selectedCity)
 {
-    int selection = 0;
+    size_t selection = 0;
 
-    scanf("%d", &selection);
+    scanf("%zu", &selection);
     clearInputBuffer();
 
     if (selection < 1 || selection > _allCities->count)
@@ -30,17 +30,17 @@ int getSelectionFromUser(cities* _allCities, city* _selectedCity)
     return selection;
 }
 
-void printSelectableCities(int _count, city* _allCities)
+void printSelectableCities(size_t _count, city* _allCities)
 {
 
     printf("\n"); /* Needed for repeat runs */
-    int i = 0;
+    size_t i = 0;
     for (; i < _count; i++)
     {
-        printf("%3d: %s\n", i + 1, _allCities[i].name);
+        printf("%3zu: %s\n", i + 1, _allCities[i].name);
     }
     printf("Any other key for exit\n");
-    printf("SELECT A CITY (1-%d): ", _count);
+    printf("SELECT A CITY (1-%zu): ", _count);
 }
 
 void printURL(char* _URL) { printf("API URL: %s\n", _URL); }
