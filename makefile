@@ -1,6 +1,7 @@
 BINARY=main.out
 CODEDIRS=source source/libs
 INCDIRS=source/libs
+BUILDDIR=build
 
 CC=gcc
 OPT=-O0
@@ -11,20 +12,23 @@ LDFLAGS=
 LDLIBS=-lcurl
 
 CFILES=$(foreach D,$(CODEDIRS),$(wildcard $(D)/*.c))
-OBJECTS=$(patsubst %.c,%.o,$(CFILES))
-DEPFILES=$(patsubst %.c,%.d,$(CFILES))
+
+OBJECTS=$(patsubst %.c,$(BUILDDIR)/%.o,$(CFILES))
+DEPFILES=$(patsubst %.c,$(BUILDDIR)/%.d,$(CFILES))
+
+DIRS=$(sort $(dir $(OBJECTS)))
 
 all: $(BINARY)
 
 $(BINARY): $(OBJECTS)
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-
-%.o:%.c
+$(BUILDDIR)/%.o: %.c
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf $(BINARY) $(OBJECTS) $(DEPFILES)
+	rm -rf $(BINARY) $(BUILDDIR)
 
 diff:
 	$(info The status of the repository, and the volume of per-file changes:)
@@ -33,4 +37,4 @@ diff:
 
 -include $(DEPFILES)
 
-.PHONY: all clean distribute diff
+.PHONY: all clean diff

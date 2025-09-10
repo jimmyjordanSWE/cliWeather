@@ -1,6 +1,6 @@
 #include <curl/curl.h>
 
-size_t callback_handleResponse(void* _recievedChunk, size_t _size, size_t _numberOfMembers, void* _userPointer)
+size_t callback_handleResponse(void* _recievedChunk, size_t _size, size_t _numberOfMembers)
 {
     /* calculate size required for return, must match otherwise CURL errors*/
     size_t realSize = _size * _numberOfMembers;
