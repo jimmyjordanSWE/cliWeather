@@ -27,13 +27,13 @@ void getCitiesFromDB(cities* _selectableCities)
     assert(swedishCitiesDataBase[strlen(swedishCitiesDataBase)] == '\0');
 
     /* Needed for sscanf to not just read the first line over and over agian */
-    unsigned int lengthOfReadString = 0;
-    unsigned int offset = 0;
+    int lengthOfReadString = 0;
+    size_t offset = 0;
 
     /* making sure its set to 0 since we start to count cities now */
     _selectableCities->count = 0;
 
-    int i;
+    size_t i;
     for (i = 0; i < 999; i++)
     {
         /* sscanf return value is number of succesfull reads */

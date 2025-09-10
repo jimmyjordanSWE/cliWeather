@@ -18,7 +18,9 @@ typedef struct
 
 typedef struct
 {
-    city* list;
+    /* TODO: must be of known size to make test data work right now
+    Must be remade to make 300k cities to work in the future */
+    city list[300];
     size_t count;
 } cities;
 
