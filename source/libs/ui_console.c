@@ -1,28 +1,28 @@
-#include "citiesStruct.h"
+#include "city_loader.h"
 #include <stdio.h>
 #include <string.h>
 
 /* for when user types in multiple invalid charachters any char is Q or q*/
-int clearInputBuffer()
+int clear_buffer_stdin()
 {
-    char currentChar;
-    while ((currentChar = getchar()) != '\n' && currentChar != EOF)
+    int current_char;
+    while ((current_char = getchar()) != '\n' && current_char != EOF)
         ;
 
     return 0;
 }
 /* denna funktion slutar inte förens den kan returnera ett valid nummer eller 0 */
-int getSelectionFromUser(cities* _allCities, city* _selectedCity)
+int get_selection_from_user(cities* _allCities, city* _selectedCity)
 {
     size_t selection = 0;
 
     scanf("%zu", &selection);
-    clearInputBuffer();
+    clear_buffer_stdin();
 
     if (selection < 1 || selection > _allCities->count)
         return 0;
 
-    _selectedCity->ID = selection - 1;
+    _selectedCity->id = selection - 1;
     strcpy(_selectedCity->name, _allCities->list[selection - 1].name);
     _selectedCity->latitude = _allCities->list[selection - 1].latitude;
     _selectedCity->longitude = _allCities->list[selection - 1].longitude;
@@ -30,7 +30,7 @@ int getSelectionFromUser(cities* _allCities, city* _selectedCity)
     return selection;
 }
 
-void printSelectableCities(size_t _count, city* _allCities)
+void print_cities(size_t _count, city* _allCities)
 {
 
     printf("\n"); /* Needed for repeat runs */
@@ -43,11 +43,11 @@ void printSelectableCities(size_t _count, city* _allCities)
     printf("SELECT A CITY (1-%zu): ", _count);
 }
 
-void printURL(char* _URL) { printf("API URL: %s\n", _URL); }
+void print_open_meteo_url(char* _URL) { printf("API URL: %s\n", _URL); }
 
-void buildURL(char* _URL, city* _selectedCity)
+void build_open_meteo_url(char* _URL, city* _selectedCity)
 {
     sprintf(_URL, "https://api.open-meteo.com/v1/forecast?latitude=%.6lf&longitude=%.6lf&current_weather=true", _selectedCity->latitude, _selectedCity->longitude);
 }
 
-void printSelectionInfo(city* selectedCity) { printf("\n%s\n", selectedCity->name); }
+void print_selected_city(city* selectedCity) { printf("\n%s\n", selectedCity->name); }

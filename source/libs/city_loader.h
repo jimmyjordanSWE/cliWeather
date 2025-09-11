@@ -1,17 +1,17 @@
-#ifndef __citiesStruct__
-#define __citiesStruct__
+#ifndef CITY_LOADER_H
+#define CITY_LOADER_H
 
 #include <stddef.h>
 
 typedef struct
 {
-    size_t ID;
+    size_t id;
     char name[1024];
     double latitude;
     double longitude;
     char country[1024];
     size_t population;
-    char timeZone[1024];
+    char time_zone[1024];
     /* should allocate these strings dynamically */
     /* also, add fields for weather data */
 } city;
@@ -24,4 +24,5 @@ typedef struct
     size_t count;
 } cities;
 
-#endif
+void load_cities_testdata(cities*);
+#endif /* CITY_LOADER_H */
