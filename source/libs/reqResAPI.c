@@ -13,8 +13,14 @@ void sendRequest(char* _URL)
 {
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
-    CURL* curl = curl_easy_init();
     CURLcode res;
+    CURL* curl = curl_easy_init();
+
+    if (curl == NULL)
+    {
+        printf("Failed to init curl");
+        return -1;
+    }
 
     curl_easy_setopt(curl, CURLOPT_URL, _URL);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback_handleResponse);
@@ -24,6 +30,8 @@ void sendRequest(char* _URL)
     if (res != CURLE_OK)
     {
         fprintf(stdout, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        curl_easy_cleanup(curl);
+        return -1;
     }
 
     curl_easy_cleanup(curl);

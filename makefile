@@ -7,15 +7,11 @@ CC=gcc
 OPT=-O0
 DEPFLAGS=-MMD -MP -MD 
 CFLAGS=-std=c89 -Wall -Wextra -g $(foreach D,$(INCDIRS),-I$(D)) $(OPT) $(DEPFLAGS)
-
 LDFLAGS=
 LDLIBS=-lcurl
-
 CFILES=$(foreach D,$(CODEDIRS),$(wildcard $(D)/*.c))
-
 OBJECTS=$(patsubst %.c,$(BUILDDIR)/%.o,$(CFILES))
 DEPFILES=$(patsubst %.c,$(BUILDDIR)/%.d,$(CFILES))
-
 DIRS=$(sort $(dir $(OBJECTS)))
 
 all: $(BINARY)
