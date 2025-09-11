@@ -1,5 +1,5 @@
-#ifndef __dataStructs__
-#define __dataStructs__
+#ifndef __citiesStruct__
+#define __citiesStruct__
 
 #include <stddef.h>
 

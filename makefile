@@ -6,7 +6,7 @@ BUILDDIR=build
 CC=gcc
 OPT=-O0
 DEPFLAGS=-MMD -MP -MD 
-CFLAGS=-std=c89 -Wall -Wextra -g $(foreach D,$(INCDIRS),-I$(D)) $(OPT) $(DEPFLAGS)
+CFLAGS=-std=c90 -Wall -Wextra -g $(foreach D,$(INCDIRS),-I$(D)) $(OPT) $(DEPFLAGS)
 LDFLAGS=
 LDLIBS=-lcurl
 CFILES=$(foreach D,$(CODEDIRS),$(wildcard $(D)/*.c))

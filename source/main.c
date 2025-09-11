@@ -1,8 +1,7 @@
-
 #include "libs/UI.h"
-#include "libs/dataStructs.h"
-#include "libs/getCities.h"
-#include "libs/reqResAPI.h"
+#include "libs/callAPI.h"
+#include "libs/citiesStruct.h"
+#include "libs/loadCities.h"
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
@@ -24,11 +23,8 @@ int main()
         }
 
         buildURL(URL, &selectedCity);
-
         printURL(URL);
-
         printSelectionInfo(&selectedCity);
-
         sendRequest(URL);
 
     } while (1);

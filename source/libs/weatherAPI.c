@@ -24,6 +24,7 @@ void sendRequest(char* _URL)
 
     curl_easy_setopt(curl, CURLOPT_URL, _URL);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback_handleResponse);
+    /*Here we can add CURLOPT_WRITEDATA to just get the data*/
 
     res = curl_easy_perform(curl);
 

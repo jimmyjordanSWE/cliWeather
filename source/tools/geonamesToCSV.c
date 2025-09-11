@@ -56,6 +56,7 @@ int main()
 
     cities allCities;
     allCities.count = cityCount;
+    /* Does not work because i hardcode list length to make it work with example data from assignment */
     allCities.list = malloc(sizeof(city) * cityCount);
 
     printf("\ncities.  : %zu B\n", malloc_usable_size(allCities.list));

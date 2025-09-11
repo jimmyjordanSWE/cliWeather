@@ -1,4 +1,4 @@
-#include "dataStructs.h"
+#include "citiesStruct.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>

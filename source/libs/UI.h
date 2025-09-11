@@ -1,7 +1,7 @@
 #ifndef __UI__
 #define __UI__
 
-#include "dataStructs.h"
+#include "citiesStruct.h"
 
 int getSelectionFromUser(cities*, city*);
 
