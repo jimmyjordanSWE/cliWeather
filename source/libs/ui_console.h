@@ -10,8 +10,6 @@ void print_cities(size_t, city*);
 
 void print_open_meteo_url(char*);
 
-void build_open_meteo_url(char*, city*);
-
 void print_selected_city(city*);
 
 #endif /* CONSOLE_UI_H */

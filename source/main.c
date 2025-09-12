@@ -1,6 +1,7 @@
 #include "libs/city_loader.h"
 #include "libs/ui_console.h"
 #include "libs/weather_api.h"
+#include <errno.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
@@ -28,14 +29,18 @@ int main()
         print_open_meteo_url(open_meteo_url);
         print_selected_city(&selected_city);
 
-        /* todo: add error handling, request can fail, then we to retry, not  use data */
-        send_request(open_meteo_url, &open_meteo_response);
-
+        if (send_request(open_meteo_url, &open_meteo_response) != 0)
+        {
+            fprintf(stderr, "send_request() failed with URL: %s\nReason: %s\n", open_meteo_url, strerror(errno));
+        }
         printf("%s\n", open_meteo_response.data);
 
     } while (1);
 
-    global_curl_cleanup_curl();
+    cleanup_weather_api();
+
+    cleanup_city_loader(&all_cities);
+
     printf("Done\n");
     return 0;
 }

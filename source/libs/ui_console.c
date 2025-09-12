@@ -45,9 +45,4 @@ void print_cities(size_t _count, city* _allCities)
 
 void print_open_meteo_url(char* _URL) { printf("API URL: %s\n", _URL); }
 
-void build_open_meteo_url(char* _URL, city* _selectedCity)
-{
-    sprintf(_URL, "https://api.open-meteo.com/v1/forecast?latitude=%.6lf&longitude=%.6lf&current_weather=true", _selectedCity->latitude, _selectedCity->longitude);
-}
-
 void print_selected_city(city* selectedCity) { printf("\n%s\n", selectedCity->name); }

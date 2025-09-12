@@ -3,7 +3,7 @@
 geoID   Namn        lat         lon         Land    Befolkning  timezone
 2673730	Stockholm   59.32938	18.06871    SE      1515017     Europe/Stockholm
 */
-#include "../libs/city_data.h"
+#include "../libs/city_loader.h"
 #include <assert.h>
 #include <malloc.h>
 #include <stdio.h>
@@ -78,7 +78,7 @@ int main()
             switch (j)
             {
             case 0:
-                allCities.list[i].ID = (size_t)strtoul(currentToken, NULL, 10);
+                allCities.list[i].id = (size_t)strtoul(currentToken, NULL, 10);
                 break;
             case 2:
                 strcpy(allCities.list[i].name, currentToken);
@@ -96,7 +96,7 @@ int main()
                 allCities.list[i].population = (size_t)strtoul(currentToken, NULL, 10);
                 break;
             case 17:
-                strcpy(allCities.list[i].timeZone, currentToken);
+                strcpy(allCities.list[i].time_zone, currentToken);
                 break;
             }
         }
@@ -112,8 +112,8 @@ int main()
     for (i = 0; i < cityCount; i++)
     {
         /* 4 decimal places gives ~10m accuracy */
-        fprintf(outputFile, "%zu,%s,%.4lf,%.4lf,%s,%zu,%s\n", allCities.list[i].ID, allCities.list[i].name, allCities.list[i].latitude, allCities.list[i].longitude, allCities.list[i].country,
-                allCities.list[i].population, allCities.list[i].timeZone);
+        fprintf(outputFile, "%zu,%s,%.4lf,%.4lf,%s,%zu,%s\n", allCities.list[i].id, allCities.list[i].name, allCities.list[i].latitude, allCities.list[i].longitude, allCities.list[i].country,
+                allCities.list[i].population, allCities.list[i].time_zone);
     }
 
     fclose(txtFile);

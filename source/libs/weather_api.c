@@ -1,5 +1,4 @@
 #include "weather_api.h"
-
 #include <curl/curl.h>
 #include <malloc.h>
 #include <string.h>
@@ -16,6 +15,11 @@ size_t handle_response(void* _recieved_chunk, size_t _size, size_t _number_of_me
     _response->data[_response->size] = '\0';
 
     return real_size;
+}
+
+void build_open_meteo_url(char* _URL, city* _selectedCity)
+{
+    sprintf(_URL, "https://api.open-meteo.com/v1/forecast?latitude=%.6lf&longitude=%.6lf&current_weather=true", _selectedCity->latitude, _selectedCity->longitude);
 }
 
 int send_request(char* _url, response_buffer* _response)
@@ -48,7 +52,7 @@ int send_request(char* _url, response_buffer* _response)
     return 0;
 }
 
-void global_curl_cleanup_curl()
+void cleanup_weather_api()
 {
     printf("running CURL global cleanup\n");
     curl_global_cleanup();

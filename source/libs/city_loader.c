@@ -1,9 +1,10 @@
 #include "city_loader.h"
 #include <assert.h>
+#include <malloc.h>
 #include <stdio.h>
 #include <string.h>
 
-/* Simulated DB*/
+/* Simulated DB */
 const char test_data[] = "Stockholm:59.3293:18.0686\n"
                          "Göteborg:57.7089:11.9746\n"
                          "Malmö:55.6050:13.0038\n"
@@ -26,15 +27,24 @@ void load_cities_testdata(cities* _selectable_cities)
     /* if not a null terminated string, exit */
     assert(test_data[strlen(test_data)] == '\0');
 
-    /* Needed for sscanf to not just read the first line over and over agian */
+    /* count cities in test_data string to know how much memory to allocate */
+    _selectable_cities->count = 0;
+    size_t i;
+    for (i = 0; test_data[i] != '\0'; i++)
+    {
+        if (test_data[i] == '\n')
+        {
+            _selectable_cities->count++;
+        }
+    }
+
+    /* allocate enough memory for storing all the cities */
+    _selectable_cities->list = malloc(sizeof(city) * _selectable_cities->count);
+
+    /* Needed for sscanf to not just read the first line over and over again */
     int length_of_read_string = 0;
     size_t offset = 0;
-
-    /* making sure its set to 0 since we start to count cities now */
-    _selectable_cities->count = 0;
-
-    size_t i;
-    for (i = 0; i < 999; i++)
+    for (i = 0; i < _selectable_cities->count; i++)
     {
         /* sscanf return value is number of succesfull reads */
         if (3 == sscanf(test_data + offset, "%[^:]:%lf:%lf%n", _selectable_cities->list[i].name, &_selectable_cities->list[i].latitude, &_selectable_cities->list[i].longitude, &length_of_read_string))
@@ -42,7 +52,6 @@ void load_cities_testdata(cities* _selectable_cities)
             /* for the testdata ID is just order read */
             _selectable_cities->list[i].id = i;
 
-            _selectable_cities->count++;
             /* +1 to skip over the '\n' at the end of each row */
             offset = offset + length_of_read_string + 1;
         }
@@ -53,3 +62,5 @@ void load_cities_testdata(cities* _selectable_cities)
         }
     }
 }
+
+void cleanup_city_loader(cities* _selectable_cities) { free(_selectable_cities->list); }

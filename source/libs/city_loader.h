@@ -5,24 +5,26 @@
 
 typedef struct
 {
+    /* todo: allocate strings dynamically */
     size_t id;
-    char name[1024];
+    char name[256]; /* geonames stores max 200 */
     double latitude;
     double longitude;
-    char country[1024];
+    char country[4];
     size_t population;
-    char time_zone[1024];
+    char time_zone[64];
     /* should allocate these strings dynamically */
     /* also, add fields for weather data */
 } city;
 
 typedef struct
 {
-    /* TODO: must be of known size to make test data work right now
-    Must be remade to make 300k cities to work in the future */
-    city list[300];
+    city* list;
     size_t count;
 } cities;
 
 void load_cities_testdata(cities*);
+
+void cleanup_city_loader(cities*);
+
 #endif /* CITY_LOADER_H */
