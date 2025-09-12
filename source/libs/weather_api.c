@@ -29,7 +29,6 @@ size_t handle_response(void* _recieved_chunk, size_t _size, size_t _number_of_me
     }
     else
     {
-
         _response->size += real_size;
         _response->data[_response->size] = '\0';
     }

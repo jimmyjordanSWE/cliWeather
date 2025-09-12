@@ -25,9 +25,6 @@ const char test_data[] = "Stockholm:59.3293:18.0686\n"
 
 void load_cities_testdata(cities* _selectable_cities)
 {
-    /* todo: dont use assert. if not a null terminated string, exit */
-    /*  assert(test_data[strlen(test_data)] == '\0');
-     */
     /* count cities in test_data string to know how much memory to allocate */
     _selectable_cities->count = 0;
     size_t i;

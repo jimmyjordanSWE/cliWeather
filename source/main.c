@@ -2,7 +2,6 @@
 #include "libs/ui_console.h"
 #include "libs/weather_api.h"
 #include <curl/curl.h>
-#include <errno.h>
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,11 +10,8 @@ int main()
 {
     cities all_cities;
     city selected_city;
-    /* todo dynamically allocate URL length */
-    char open_meteo_url[1024];
-
-    /* todo denna töms inte mellan varje anrop */
     response_buffer open_meteo_response = {NULL, 0};
+    char open_meteo_url[256];
 
     do
     {
@@ -34,8 +30,9 @@ int main()
 
         if (send_request(open_meteo_url, &open_meteo_response) != CURLE_OK)
         {
-            fprintf(stderr, "send_request() failed with URL: %s\nerrno: %s\n", open_meteo_url, strerror(errno));
+            fprintf(stderr, "send_request() failed with URL: %s\n", open_meteo_url);
         }
+
         printf("%s\n", open_meteo_response.data);
 
         free(open_meteo_response.data);
