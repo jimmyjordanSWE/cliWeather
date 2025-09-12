@@ -1,18 +1,38 @@
 #include "weather_api.h"
+#include "memcpy_wrapper.h"
 #include <curl/curl.h>
+#include <errno.h>
 #include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 
 size_t handle_response(void* _recieved_chunk, size_t _size, size_t _number_of_members, response_buffer* _response)
 {
     /* calculate size required for return, must match otherwise CURL errors*/
     size_t real_size = _size * _number_of_members;
+    size_t new_buffer_size = _response->size + real_size + 1;
 
-    /* här ville AI använda en tmp adress först för at trealloc can faila och sabba allt. samt att då kan memcpy skriva på fel adresser*/
-    _response->data = realloc(_response->data, _response->size + real_size + 1);
-    memcpy(_response->data + _response->size, _recieved_chunk, real_size);
-    _response->size += real_size;
-    _response->data[_response->size] = '\0';
+    /* todo: dont realloc every time, grow buffer in larger increments */
+    char* temporary_adress = realloc(_response->data, new_buffer_size);
+    if (temporary_adress == NULL)
+    {
+        fprintf(stderr, "Memory allocation failed for selectable_cities->list\nerrno: %s\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        _response->data = temporary_adress;
+    }
+    if (checked_memcpy(_response->data + _response->size, _recieved_chunk, real_size) == -1)
+    {
+        return -1;
+    }
+    else
+    {
+
+        _response->size += real_size;
+        _response->data[_response->size] = '\0';
+    }
 
     return real_size;
 }

@@ -1,10 +1,10 @@
 
-/* Så här ska det se ut i slutet
+/* Så här ska output filen se ut
 geoID   Namn        lat         lon         Land    Befolkning  timezone
 2673730	Stockholm   59.32938	18.06871    SE      1515017     Europe/Stockholm
 */
 #include "../libs/city_loader.h"
-#include <assert.h>
+#include <errno.h>
 #include <malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,9 +36,13 @@ int main()
     printf("\r     READ: %zu B\n", fileSizeBytes);
 
     char* inputBuffer = malloc(fileSizeBytes);
-    assert(malloc_usable_size(inputBuffer) > fileSizeBytes); /* crasha om vi allokerat för litet */
+    if (inputBuffer == NULL)
+    {
+        fprintf(stderr, "Memory allocation failed for selectable_cities->list\nerrno: %s\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
 
-    printf("ALLOCATED: %zu B\n", malloc_usable_size(inputBuffer)); /* oinly works on linux*/
+    printf("ALLOCATED: %zu B\n", malloc_usable_size(inputBuffer)); /* only works on linux*/
 
     /* reset internal state of fgetc() */
     rewind(txtFile);
@@ -58,6 +62,11 @@ int main()
     allCities.count = cityCount;
     /* Does not work because i hardcode list length to make it work with example data from assignment */
     allCities.list = malloc(sizeof(city) * cityCount);
+    if (allCities.list == NULL)
+    {
+        fprintf(stderr, "Memory allocation failed for selectable_cities->list\nerrno: %s\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
 
     printf("\ncities.  : %zu B\n", malloc_usable_size(allCities.list));
 
@@ -118,6 +127,8 @@ int main()
 
     fclose(txtFile);
     fclose(outputFile);
+
     free(inputBuffer);
+    free(allCities.list);
     return 0;
 }

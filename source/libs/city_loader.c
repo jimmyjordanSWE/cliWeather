@@ -1,7 +1,8 @@
 #include "city_loader.h"
-#include <assert.h>
+#include <errno.h>
 #include <malloc.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* Simulated DB */
@@ -24,9 +25,9 @@ const char test_data[] = "Stockholm:59.3293:18.0686\n"
 
 void load_cities_testdata(cities* _selectable_cities)
 {
-    /* if not a null terminated string, exit */
-    assert(test_data[strlen(test_data)] == '\0');
-
+    /* todo: dont use assert. if not a null terminated string, exit */
+    /*  assert(test_data[strlen(test_data)] == '\0');
+     */
     /* count cities in test_data string to know how much memory to allocate */
     _selectable_cities->count = 0;
     size_t i;
@@ -40,6 +41,11 @@ void load_cities_testdata(cities* _selectable_cities)
 
     /* allocate enough memory for storing all the cities */
     _selectable_cities->list = malloc(sizeof(city) * _selectable_cities->count);
+    if (_selectable_cities->list == NULL)
+    {
+        fprintf(stderr, "Memory allocation failed for selectable_cities->list\nerrno: %s\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
 
     /* Needed for sscanf to not just read the first line over and over again */
     int length_of_read_string = 0;

@@ -1,8 +1,9 @@
 #include "libs/city_loader.h"
 #include "libs/ui_console.h"
 #include "libs/weather_api.h"
+#include <curl/curl.h>
 #include <errno.h>
-#include <stddef.h>
+#include <malloc.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -10,8 +11,10 @@ int main()
 {
     cities all_cities;
     city selected_city;
+    /* todo dynamically allocate URL length */
     char open_meteo_url[1024];
 
+    /* todo denna töms inte mellan varje anrop */
     response_buffer open_meteo_response = {NULL, 0};
 
     do
@@ -29,16 +32,19 @@ int main()
         print_open_meteo_url(open_meteo_url);
         print_selected_city(&selected_city);
 
-        if (send_request(open_meteo_url, &open_meteo_response) != 0)
+        if (send_request(open_meteo_url, &open_meteo_response) != CURLE_OK)
         {
-            fprintf(stderr, "send_request() failed with URL: %s\nReason: %s\n", open_meteo_url, strerror(errno));
+            fprintf(stderr, "send_request() failed with URL: %s\nerrno: %s\n", open_meteo_url, strerror(errno));
         }
         printf("%s\n", open_meteo_response.data);
+
+        free(open_meteo_response.data);
+        open_meteo_response.data = NULL;
+        open_meteo_response.size = 0;
 
     } while (1);
 
     cleanup_weather_api();
-
     cleanup_city_loader(&all_cities);
 
     printf("Done\n");
