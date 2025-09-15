@@ -11,6 +11,7 @@ int main()
     cities all_cities;
     city selected_city;
     response_buffer open_meteo_response = {NULL, 0};
+    curl_global_init(CURL_GLOBAL_DEFAULT);
     char open_meteo_url[256];
 
     do

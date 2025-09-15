@@ -52,7 +52,6 @@ int send_request(char* _url, response_buffer* _response)
         return -1;
     }
 
-    curl_global_init(CURL_GLOBAL_DEFAULT);
     curl_easy_setopt(curl, CURLOPT_URL, _url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, handle_response);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)_response); /* cast to void* because curl must work for all type of responses */
